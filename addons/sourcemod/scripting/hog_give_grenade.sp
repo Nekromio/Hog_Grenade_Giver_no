@@ -22,7 +22,7 @@ public Plugin myinfo =
 	name = "[Hog] Grenate Giver",
 	author = "Nek.'a 2x2 | ggwp.site ",
 	description = "Выдача гранат всем кроме Кабана",
-	version = "1.0.0",
+	version = "1.0.4",
 	url = "https://ggwp.site/"
 };
 
@@ -46,9 +46,10 @@ void Event_PlayerSpawn(Event hEvent, const char[] name, bool dontBroadcast)
 
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 
-	if(HOG_ValideClient(client) && !HOG_GetStstusHog(client))
+	if(0 < client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client))
 	{
-		GiveWeaponHog(client);
+		if(!HOG_GetStstusHog(client))
+			GiveWeaponHog(client);
 	}	
 }
 
@@ -66,7 +67,7 @@ stock void GiveWeaponHog(int client)
 {
 	for(int i = 11, j = 0; i < 14; i++, j++)
 	{
-		if(GetEntProp(client, Prop_Send, "m_iAmmo", _, i) < 1)
+		if(cvGiveGrenade[j].IntValue && GetEntProp(client, Prop_Send, "m_iAmmo", _, i) < 1)
 			GivePlayerItem(client, sGrenadeList[j]);
 		if(!(GetEntProp(client, Prop_Send, "m_iAmmo", _, i) >= cvGiveGrenade[j].IntValue))
 			SetEntProp(client, Prop_Send, "m_iAmmo", cvGiveGrenade[j].IntValue, _, i);
